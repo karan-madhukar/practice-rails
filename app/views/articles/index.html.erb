@@ -1,0 +1,73 @@
+<div class="text-right col-md-12 border-bottom border-secondary mb-2" %>
+  <strong><%= link_to "create article", new_article_path, class: "btn" %></strong>
+</div>
+
+<%= form_tag(articles_path, method: :get) do |f|%> 
+  <div class="form-group row ml-5">
+    <div class="col-9">
+      <%= text_field_tag :q, params[:q], placeholder: "search Article by name", class: "form-control"%>
+    </div>
+    <div class="col-2">
+      <%= submit_tag "Search", class: "btn btn-primary"%>
+    </div>
+  </div>
+<% end %>
+
+<% @article.each do |article| %>
+  <div class="col-6 mx-auto border-bottom border-info mb-3">
+    <div class="image">
+      <%= image_tag article.image.url , class: "img-fluid" %>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Title: <%=article.title%></h3>
+        <p class="card-text">Description: <%=article.description.truncate(53) %></p>
+      </div>
+      <% if logged_in %>
+        <% if current_user.reactions.find_by(article: article) == nil && current_user != article.user %>
+          <div class="justify-content-center row my-4">
+            <%= form_for(Reaction.new, url: reactions_path) do |f| %>
+              <%= f.hidden_field :user_id, value: current_user.id %>
+              <%= f.hidden_field :article_id, value: article.id %>
+              <%= f.hidden_field :react, value: true %>
+              <div class="col-12">
+                <strong><%=  f.submit "like", class: "btn btn-primary btn-block" %></strong>
+              </div>
+            <% end %> 
+            <%= form_for(Reaction.new, url: reactions_path) do |f| %>
+              <%= f.hidden_field :user_id, value: current_user.id %>
+              <%= f.hidden_field :article_id, value: article.id %>
+              <%= f.hidden_field :react, value: false %>
+              <div class="col-12">
+                <strong><%=  f.submit "dislike", class: "btn btn-danger btn-block" %></strong>
+              </div>
+            <% end %>
+          </div> 
+        <% elsif current_user.reactions.find_by(article: article) != nil && current_user != article.user  %>
+          <div class="justify-content-center row my-4">
+            <%= form_for(article, url: like_reaction_article_path(article)) do |f| %>
+              <%= f.hidden_field :user_id, value: current_user.id %>
+              <div class="col-12">
+                <strong><%=  f.submit "like", class: "btn btn-primary btn-block" %></strong>
+              </div>
+            <% end %> 
+            <%= form_for(article, url: dislike_reaction_article_path(article)) do |f| %>
+              <%= f.hidden_field :user_id, value: current_user.id %>
+              <div class="col-12">
+                <strong><%=  f.submit "dislike", class: "btn btn-danger btn-block" %></strong>
+              </div>
+            <% end %>
+          </div>  
+        <% end %>
+      <% end %>
+      <% if current_user == article.user %>
+        <div class="justify-content-center row my-4">
+          <div class="col-sm-4">
+            <strong><%=  link_to "edit", edit_article_path(article), class: "btn btn-info btn-block" %></strong>
+          </div>
+        </div>
+      <% end %> 
+    </div>
+  </div>
+<% end %>
+

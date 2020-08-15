@@ -1,0 +1,32 @@
+<%= form_for :session, url: login_path do |f| %>
+<div class="col-8 mx-auto">
+  <div class="card">
+    <div class="card-header text-center">
+      <h3>login</h3>
+    </div>
+    <div class="card-body text-right">
+      <div class="form-group row">
+        <%= f.label :email, class: "col-sm-4 col-form-label" %>
+        <div class="col-sm-6">
+          <%= f.email_field :email, class: "form-control" %>
+        </div>  
+      </div>
+      <div class="form-group row">
+        <%= f.label :password, class: "col-sm-4 col-form-label" %>
+        <div class="col-sm-6">
+          <%= f.password_field :password, class: "form-control" %>
+        </div>  
+      </div>
+    </div>
+  </div>
+  <div class="justify-content-center row my-4">
+    <div class="col-sm-4">
+      <strong><%= link_to "back", root_path, class: "btn btn-secondary btn-block" %></strong>
+    </div>
+    <div class="col-sm-4">
+      <strong><%= f.submit "login", class: "btn btn-primary btn-block" %></strong>
+    </div>
+  </div>
+ </div>
+<% end %>
+
