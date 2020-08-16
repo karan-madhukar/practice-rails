@@ -28,6 +28,16 @@
           <%= f.file_field :image, class: "form-control"%>
         </div>  
       </div>
+       <div class="form-group row">
+        <%= f.label :article_category, class: "col-sm-4 col-form-label" %>
+        <div class="col-sm-2">
+          <%= f.select(:category_id) do %>
+            <% Category.all.each do |c| %>
+             <%= content_tag(:option, c.name, value: c.id) %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
   <div class="justify-content-center row my-4">

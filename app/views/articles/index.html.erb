@@ -1,6 +1,13 @@
-<div class="text-right col-md-12 border-bottom border-secondary mb-2" %>
-  <strong><%= link_to "create article", new_article_path, class: "btn" %></strong>
-</div>
+<% if logged_in && !current_user.admin %>
+  <div class="text-right col-md-12 border-bottom border-secondary mb-2" %>
+    <strong><%= link_to "create article", new_article_path, class: "btn" %></strong>
+  </div>
+<% elsif logged_in && current_user.admin %>
+ <div class="text-right col-md-12 border-bottom border-secondary mb-2" %>
+    <strong><%= link_to "create category", new_category_path, class: "btn" %></strong>
+  </div>
+<% end %>
+
 
 <%= form_tag(articles_path, method: :get) do |f|%> 
   <div class="form-group row ml-5">
@@ -21,6 +28,7 @@
     <div class="card">
       <div class="card-body">
         <h3 class="card-title">Title: <%=article.title%></h3>
+        <h5 class="card-title">Category: <%=article.category.name%></h5>       
         <p class="card-text">Description: <%=article.description.truncate(53) %></p>
       </div>
       <% if logged_in %>
@@ -31,7 +39,7 @@
               <%= f.hidden_field :article_id, value: article.id %>
               <%= f.hidden_field :react, value: true %>
               <div class="col-12">
-                <strong><%=  f.submit "like", class: "btn btn-primary btn-block" %></strong>
+                <strong><%=  f.submit "0 like", class: "btn btn-primary btn-block" %></strong>
               </div>
             <% end %> 
             <%= form_for(Reaction.new, url: reactions_path) do |f| %>
@@ -39,7 +47,7 @@
               <%= f.hidden_field :article_id, value: article.id %>
               <%= f.hidden_field :react, value: false %>
               <div class="col-12">
-                <strong><%=  f.submit "dislike", class: "btn btn-danger btn-block" %></strong>
+                <strong><%=  f.submit "0 dislike", class: "btn btn-danger btn-block" %></strong>
               </div>
             <% end %>
           </div> 
@@ -48,13 +56,13 @@
             <%= form_for(article, url: like_reaction_article_path(article)) do |f| %>
               <%= f.hidden_field :user_id, value: current_user.id %>
               <div class="col-12">
-                <strong><%=  f.submit "like", class: "btn btn-primary btn-block" %></strong>
+                <strong><%= article.reactions.where(react: true).count %><%=  f.submit "like", class: "btn btn-primary btn-block" %></strong>
               </div>
             <% end %> 
             <%= form_for(article, url: dislike_reaction_article_path(article)) do |f| %>
               <%= f.hidden_field :user_id, value: current_user.id %>
               <div class="col-12">
-                <strong><%=  f.submit "dislike", class: "btn btn-danger btn-block" %></strong>
+                <strong><%= article.reactions.where(react: false).count %><%=  f.submit "dislike", class: "btn btn-danger btn-block" %></strong>
               </div>
             <% end %>
           </div>  

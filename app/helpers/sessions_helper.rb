@@ -10,7 +10,7 @@ module SessionsHelper
 
   def require_admin
     unless logged_in && current_user.admin
-      redirect_to error_page, flash: { danger: "only admin can do this action!"}
+      redirect_to error_path, flash: { danger: "only admin can do this action!"}
     end
   end
 
