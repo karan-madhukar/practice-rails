@@ -7,14 +7,14 @@ Rails.application.routes.draw do
   get "error", to: "sessions#error"
   resources :users, except: [:new, :index]
 
-  resources :articles do
+  resources :reactions do
     member do
-      patch "like_reaction"
-      patch "dislike_reaction"
+      patch "like_update"
+      patch "dislike_update"
 
     end
   end
 
-  resources :reactions
+  resources :articles
   resources :categories
 end

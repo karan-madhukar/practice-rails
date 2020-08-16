@@ -39,7 +39,8 @@
               <%= f.hidden_field :article_id, value: article.id %>
               <%= f.hidden_field :react, value: true %>
               <div class="col-12">
-                <strong><%=  f.submit "0 like", class: "btn btn-primary btn-block" %></strong>
+                <strong><%= article.reactions.where(react: true).count %>
+                <%=  f.submit "like", class: "btn btn-primary btn-block" %></strong>
               </div>
             <% end %> 
             <%= form_for(Reaction.new, url: reactions_path) do |f| %>
@@ -47,22 +48,23 @@
               <%= f.hidden_field :article_id, value: article.id %>
               <%= f.hidden_field :react, value: false %>
               <div class="col-12">
-                <strong><%=  f.submit "0 dislike", class: "btn btn-danger btn-block" %></strong>
+                <strong><%= article.reactions.where(react: false).count %><%=  f.submit "dislike", class: "btn btn-secondary btn-block" %></strong>
               </div>
             <% end %>
           </div> 
         <% elsif current_user.reactions.find_by(article: article) != nil && current_user != article.user  %>
           <div class="justify-content-center row my-4">
-            <%= form_for(article, url: like_reaction_article_path(article)) do |f| %>
+            <%= form_for(article.reactions.where(user: current_user).first, url: like_update_reaction_path(article.reactions.where(user: current_user).first.id)) do |f| %>
               <%= f.hidden_field :user_id, value: current_user.id %>
               <div class="col-12">
-                <strong><%= article.reactions.where(react: true).count %><%=  f.submit "like", class: "btn btn-primary btn-block" %></strong>
+                <strong><%=  f.submit "#{article.reactions.where(react: true).count} like", class: "btn btn-#{ article.reactions.where(user: current_user).first.react ? "success" : "primary" } btn-block" %></strong>
               </div>
             <% end %> 
-            <%= form_for(article, url: dislike_reaction_article_path(article)) do |f| %>
+            <%= form_for(article.reactions.where(user: current_user).first, url: dislike_update_reaction_path(article.reactions.where(user: current_user).first.id)) do |f| %>
               <%= f.hidden_field :user_id, value: current_user.id %>
               <div class="col-12">
-                <strong><%= article.reactions.where(react: false).count %><%=  f.submit "dislike", class: "btn btn-danger btn-block" %></strong>
+                <strong>
+                <%=  f.submit "#{article.reactions.where(react: false).count} dislike", class: "btn btn-#{ (article.reactions.where(user: current_user).first.react || article.reactions.where(user: current_user).first.react == nil)  ? "secondary" : "danger" } btn-block" %></strong>
               </div>
             <% end %>
           </div>  

@@ -15,7 +15,7 @@ class ReactionsController < ApplicationController
   end
 
   def update
-    @reaction = curret_user.reactions.find_by(article: article)
+    @reaction = curret_user.reactions.find_by(article)
     if @reaction.react == true
       if @reaction.update(react: nil)
         redirect_to root_path, flash: { success: "you removed your reaction from an article!" }
@@ -31,7 +31,18 @@ class ReactionsController < ApplicationController
     end
   end
 
-  private
+  def like_update
+    @reaction = Reaction.find(params[:id])
+    update_like(@reaction)
+  end
+  
+   
+    def dislike_update
+      @reaction = Reaction.find(params[:id])
+      update_dislike(@reaction)
+    end
+
+private
   def reaction_params
     params.require(:reaction).permit(:user_id, :article_id, :react)
   end

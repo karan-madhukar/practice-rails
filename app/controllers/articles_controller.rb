@@ -33,52 +33,6 @@ class ArticlesController < ApplicationController
     end
   end
 
-  def like_reaction
-    @article = Article.find(params[:id])
-    
-    @reaction = current_user.reactions.find_by(article: @article.id)
-    if @article.update(article_params)
-      if @reaction.react == true
-        if @reaction.update(react: nil)
-          redirect_to root_path, flash: { success: "you removed your reaction from an article!" }
-        end
-      elsif @reaction.react == false
-        if @reaction.update(react: true)
-          redirect_to root_path, flash: { success: "changed reaction! liked an article!" }
-        end
-      else
-        if @reaction.update(react: true)
-          redirect_to root_path, flash: { success: "you liked an article!" }
-        end
-      end
-    else
-      render "edit"
-    end
-  end
-   
-    def dislike_reaction
-      @article = Article.find(params[:id])
-      
-      @reaction = current_user.reactions.find_by(article: @article.id)
-      if @article.update(article_params)
-        if @reaction.react == false
-          if @reaction.update(react: nil)
-            redirect_to root_path, flash: { success: "you removed your reaction from an article!" }
-          end
-        elsif @reaction.react == true
-          if @reaction.update(react: false)
-            redirect_to root_path, flash: { success: "changed reaction! disliked an article!" }
-          end
-        else
-          if @reaction.update(react: false)
-            redirect_to root_path, flash: { success: "you disiked an article!" }
-          end
-        end
-      else
-        render "edit"
-      end
-     end
-
   private
 
   def article_params
