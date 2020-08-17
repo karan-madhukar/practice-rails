@@ -1,35 +1,59 @@
 <% if logged_in && !current_user.admin %>
-  <div class="text-right col-md-12 border-bottom border-secondary mb-2" %>
-    <strong><%= link_to "create article", new_article_path, class: "btn" %></strong>
+  <div class="text-right border-bottom border-secondary mb-2" %>
+    <strong><%= link_to "Create Article", new_article_path, class: "btn" %></strong>
+    <strong><%= link_to "Liked", new_article_path, class: "btn" %></strong>
+    <strong><%= link_to "Commented", new_article_path, class: "btn" %></strong>
   </div>
 <% elsif logged_in && current_user.admin %>
- <div class="text-right col-md-12 border-bottom border-secondary mb-2" %>
+ <div class="text-right  border-bottom border-secondary mb-2" %>
     <strong><%= link_to "create category", new_category_path, class: "btn" %></strong>
   </div>
 <% end %>
 
 
-<%= form_tag(articles_path, method: :get) do |f|%> 
-  <div class="form-group row ml-5">
-    <div class="col-9">
-      <%= text_field_tag :q, params[:q], placeholder: "search Article by name", class: "form-control"%>
+
+  <div class="form-group row justify-content-center">
+    <div class="col-2 my-2 pr-0">
+    <%= form_tag(articles_path, method: :get) do %> 
+        <select name="filter_option" onchange="this.form.submit()">
+          <option value="" selected>filter by category</option>
+          <% Category.all.each do |c| %>
+              <% if session[:filter_option]%>
+                <option value="<%= c.id %>" selected><%= c.name %></option>
+              <% else %>
+                <option value="<%= c.id %>"><%= c.name %></option>
+              <% end %>
+          <% end %>
+        </select>
+      <% end %>
     </div>
-    <div class="col-2">
-      <%= submit_tag "Search", class: "btn btn-primary"%>
+    <div class="col-10">
+      <%= form_tag(articles_path, method: :get) do %> 
+      <div class="row">
+        <div class="col-10 p-0">
+          <%= text_field_tag :search_name, params[:search_name], placeholder: "search Article by name", class: "form-control"%>
+        </div>
+        <div class="col-2 p-0">
+          <%= submit_tag "Search", class: "btn btn-primary"%>
+        </div>
+        </div>
+      <% end %>
     </div>
   </div>
-<% end %>
+
 
 <% @article.each do |article| %>
-  <div class="col-6 mx-auto border-bottom border-info mb-3">
-    <div class="image">
-      <%= image_tag article.image.url , class: "img-fluid" %>
-    </div>
+  <div class=" col-6 mx-auto border-bottom border-info mb-3">
+    <a class="btn" href="/articles/<%= article.id %>">
+      <div class="image">
+        <%= image_tag article.image.url %>
+      </div>
+    </a>
     <div class="card">
       <div class="card-body">
-        <h3 class="card-title">Title: <%=article.title%></h3>
-        <h5 class="card-title">Category: <%=article.category.name%></h5>       
-        <p class="card-text">Description: <%=article.description.truncate(53) %></p>
+        <h3 class="card-title">Title: <%= article.title %></h3>
+        <h5 class="card-title">Category: <%= article.category.name %></h5>       
+        <p class="card-text">Description: <%= article.description.truncate(53) %></p>
       </div>
       <% if logged_in %>
         <% if current_user.reactions.find_by(article: article) == nil && current_user != article.user %>
@@ -39,8 +63,8 @@
               <%= f.hidden_field :article_id, value: article.id %>
               <%= f.hidden_field :react, value: true %>
               <div class="col-12">
-                <strong><%= article.reactions.where(react: true).count %>
-                <%=  f.submit "like", class: "btn btn-primary btn-block" %></strong>
+                <strong>
+                <%=  f.submit "0 like", class: "btn btn-primary btn-block" %></strong>
               </div>
             <% end %> 
             <%= form_for(Reaction.new, url: reactions_path) do |f| %>
@@ -48,7 +72,7 @@
               <%= f.hidden_field :article_id, value: article.id %>
               <%= f.hidden_field :react, value: false %>
               <div class="col-12">
-                <strong><%= article.reactions.where(react: false).count %><%=  f.submit "dislike", class: "btn btn-secondary btn-block" %></strong>
+                <strong><%=  f.submit "0 dislike", class: "btn btn-secondary btn-block" %></strong>
               </div>
             <% end %>
           </div> 
@@ -73,7 +97,7 @@
       <% if current_user == article.user %>
         <div class="justify-content-center row my-4">
           <div class="col-sm-4">
-            <strong><%=  link_to "edit", edit_article_path(article), class: "btn btn-info btn-block" %></strong>
+            <strong><%=  link_to "edit", edit_article_path(article), class: "btn btn-primary btn-block" %></strong>
           </div>
         </div>
       <% end %> 

@@ -1,0 +1,41 @@
+<div class="row justify-content-center">
+  <div class="col-5 border-bottom border-info mb-3">
+    <div class="image">
+      <%= image_tag @article.image.url , class: "img-fluid" %>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Title: <%= @article.title%></h3>
+        <h5 class="card-title">Category: <%= @article.category.name%></h5>       
+        <p class="card-text">Description: <%= @article.description %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-3">
+    <div>
+     <h5>all comments</h5>
+      <% @comment.each do |c|%>
+        <ul>
+          <li><%=current_user.name  %>:  <%= c.comment%></li>
+        </ul>
+      <% end %>
+    </div>
+    <div>
+      <%=form_for(Comment.new, url:comments_path) do |f| %>
+        <%= f.hidden_field :article_id, value: @article.id %>
+        <%= f.hidden_field :user_id, value: current_user.id %>
+        <div class="form-group row">
+          <%= f.label :comment, class: "col-sm-4 col-form-label" %>
+          <div>
+           <%= f.text_field :comment, class: "form-control"%>
+          </div>
+          <%= f.submit "comment", class: "btn btn-primary"%>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+      
+
+
