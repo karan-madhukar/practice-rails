@@ -5,12 +5,13 @@ class ReactionsController < ApplicationController
 
     if @reaction.save
       if @reaction.react == true
-        redirect_to root_path, flash: { success: "you liked an article!" }
+        @reaction 
+        respond_to :js
       else
-        redirect_to root_path, flash: { success: "you disliked an article!" }
+        redirect_to :root_path , flash: { danger: "something goes wrong!" } 
       end
     else
-      redirect_to root_path, flash: { danger: "you reacted on an article!" }
+      redirect_to :root_path , flash: { danger: "something goes wrong!" } 
     end
   end
 
@@ -21,10 +22,10 @@ class ReactionsController < ApplicationController
   end
   
    
-    def dislike_update
-      @reaction = Reaction.find(params[:id])
-      update_dislike(@reaction)
-    end
+  def dislike_update
+    @reaction = Reaction.find(params[:id])
+    update_dislike(@reaction)
+  end
 
 private
   def reaction_params

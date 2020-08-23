@@ -40,6 +40,20 @@ class ArticlesController < ApplicationController
     @comment = @article.comments.all
   end
 
+  def pdf_download
+    @articles = current_user.articles.all
+    
+    respond_to do |format|
+      format.pdf do
+        pdf = ExportPdf.new(@articles, current_user)
+        send_data pdf.render,
+          filename: "export.pdf",
+          type: 'application/pdf',
+          disposition: 'inline'
+      end
+    end
+  end
+
   private
 
   def article_params
@@ -47,16 +61,16 @@ class ArticlesController < ApplicationController
   end
 
   def initialize_search
-    session[:search_name] = params[:search_name]
     params[:filter_option] = nil if params[:filter_option] == ""
      if session[:filter_option] != params[:filter_option]
-         session[:filter_option] = params[:filter_option]
+        session[:filter_option] = params[:filter_option]
      end
   end
 
   def handle_search_name
+    session[:search_name] = params[:search_name]
     if session[:search_name]
-      @article = Article.where("title Like ?", "%#{session[:search_name].titleize}%")
+      @article = Article.where("title LIKE ?", "%#{session[:search_name]}%")
     else
       @article = Article.all
     end
@@ -65,8 +79,6 @@ class ArticlesController < ApplicationController
   def handle_filters
     if session[:filter_option] 
       @article = Article.where(category_id: session[:filter_option])
-    else
-      @article = Article.all
     end
   end
   

@@ -2,5 +2,9 @@
 @import "/*";
 
 .container {
-    max-width: 1330px;
+  max-width: 1330px;
+}
+
+.overflow {
+  word-wrap: break-word;
 }

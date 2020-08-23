@@ -1,0 +1,17 @@
+<%= form_for(Reaction.new, url: reactions_path, remote: true) do |f| %>
+  <%= f.hidden_field :user_id, value: current_user.id %>
+  <%= f.hidden_field :article_id, value: article.id %>
+  <%= f.hidden_field :react, value: true %>
+  <div class="col-12">
+    <strong>
+    <%=  f.submit "0 like", class: "btn btn-secondary btn-block" %></strong>
+  </div>
+<% end %> 
+<%= form_for(Reaction.new, url: reactions_path, remote: true) do |f| %>
+  <%= f.hidden_field :user_id, value: current_user.id %>
+  <%= f.hidden_field :article_id, value: article.id %>
+  <%= f.hidden_field :react, value: false %>
+  <div class="col-12">
+    <strong><%=  f.submit "0 dislike", class: "btn btn-secondary btn-block" %></strong>
+  </div>
+<% end %>

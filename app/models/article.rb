@@ -11,9 +11,10 @@ class Article < ApplicationRecord
   has_many :comments, dependent: :destroy
 
   #settings do
-  #  mappings dynamic: false do
-  #    indexes :title, type: :text, analyzer: :english
-  #  end
+   # mappings dynamic: false do
+    #  indexes :title, type: :text, analyzer: :english
+     # indexes :description, type: :text, analyzer: :english
+   # end
   #end
 
 end

@@ -1,0 +1,26 @@
+<div class="col-2 my-2 pr-0">
+  <%= form_tag(articles_path, method: :get) do %> 
+      <select name="filter_option" onchange="this.form.submit()">
+        <option value="">filter by category</option>
+        <% Category.all.each do |c| %>
+            <% if session[:filter_option] && c.id == @article.first.category.id %>
+              <option value="<%= c.id %>" selected><%= c.name %></option>
+            <% else %>
+              <option value="<%= c.id %>"><%= c.name %></option>
+            <% end %>
+        <% end %>
+      </select>
+    <% end %>
+  </div>
+  <div class="col-10">
+    <%= form_tag(articles_path, method: :get) do %> 
+    <div class="row">
+      <div class="col-10 p-0">
+        <%= text_field_tag :search_name, params[:search_name], placeholder: "Search Article by Name", class: "form-control"%>
+      </div>
+      <div class="col-2 p-0">
+        <%= submit_tag "Search", class: "btn btn-primary"%>
+      </div>
+      </div>
+    <% end %>
+  </div>

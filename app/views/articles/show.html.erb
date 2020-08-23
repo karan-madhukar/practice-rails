@@ -5,22 +5,42 @@
     </div>
     <div class="card">
       <div class="card-body">
-        <h3 class="card-title">Title: <%= @article.title%></h3>
-        <h5 class="card-title">Category: <%= @article.category.name%></h5>       
-        <p class="card-text">Description: <%= @article.description %></p>
+        <div class="d-flex justify-content-between mx-2">
+          <h3 class="card-title"><em><%= @article.title %></em></h3>
+          <h6 class="card-title mt-2">category: <%= @article.category.name %></h6>       
+        </div>    
+        <p class="card-text"><%= @article.description %></p>
       </div>
+      <% if logged_in %>
+      <% if current_user.reactions.find_by(article: @article) == nil && current_user != @article.user %>
+        <div class="justify-content-center row my-4" id="like-icon-article-<%= @article.id %>">
+          <%= render "articles/create", article: @article %>
+        </div> 
+      <% elsif current_user.reactions.find_by(article: @article) != nil && current_user != @article.user  %>
+        <div id="like-icon-article-<%= @article.id %>" >
+          <%= render 'articles/like', article: @article %>
+        </div>
+      <% end %>
+    <% end %>
+    <% if current_user == @article.user %>
+      <div class="justify-content-center row my-4">
+        <div class="col-sm-4">
+          <strong><%=  link_to "edit", edit_article_path(@article), class: "btn btn-primary btn-block" %></strong>
+        </div>
+      </div>
+    <% end %> 
     </div>
   </div>
 
   <div class="col-3">
-    <div>
-     <h5>all comments</h5>
-      <% @comment.each do |c|%>
+     <h5>Comments</h5>
         <ul>
-          <li><%=current_user.name  %>:  <%= c.comment%></li>
+         <% @comment.each do |c|%>
+          <div class="mt-2 overflow">
+            <li><%=current_user.name  %>:  <%= c.comment%></li>
+          </div>
+          <% end %>
         </ul>
-      <% end %>
-    </div>
     <div>
       <%=form_for(Comment.new, url:comments_path) do |f| %>
         <%= f.hidden_field :article_id, value: @article.id %>

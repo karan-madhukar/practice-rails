@@ -11,11 +11,11 @@ Rails.application.routes.draw do
     member do
       patch "like_update"
       patch "dislike_update"
-
     end
   end
 
   resources :articles
+  get "download_pdf", to: "articles#pdf_download"
   resources :categories
   resources :comments
 end

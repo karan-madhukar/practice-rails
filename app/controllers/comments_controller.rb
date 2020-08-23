@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
     @comment = Comment.new(comment_params)
 
     if @comment.save
-      redirect_to article_path(@comment.article), flash: { success: "you commented on the article" }
+      redirect_to article_path(@comment.article)
     else
       redirect_to article_path, flash: { danger: "check the inputs"}
     end

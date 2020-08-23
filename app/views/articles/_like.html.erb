@@ -1,0 +1,15 @@
+<div class="justify-content-center row my-4">
+  <%= form_for(article.reactions.where(user: current_user).first, url: like_update_reaction_path(article.reactions.where(user: current_user).first.id), remote: true) do |f| %>
+    <%= f.hidden_field :user_id, value: current_user.id %>
+    <div class="col-12">
+      <strong><%=  f.submit "#{article.reactions.where(react: true).count} like", class: "btn btn-#{ article.reactions.where(user: current_user).first.react ? "success" : "secondary" } btn-block" %></strong>
+    </div>
+  <% end %> 
+  <%= form_for(article.reactions.where(user: current_user).first, url: dislike_update_reaction_path(article.reactions.where(user: current_user).first.id), remote: true) do |f| %>
+    <%= f.hidden_field :user_id, value: current_user.id %>
+    <div class="col-12">
+      <strong>
+      <%=  f.submit "#{article.reactions.where(react: false).count} dislike", class: "btn btn-#{ (article.reactions.where(user: current_user).first.react || article.reactions.where(user: current_user).first.react == nil)  ? "secondary" : "danger" } btn-block" %></strong>
+    </div>
+  <% end %>
+</div> 
